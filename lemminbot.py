@@ -38,7 +38,7 @@ def main():
     
     #directory and file name 
     dest_dir = "{}/{:02}{:02}{:02}".format(BASE_DIR, ts.year, ts.month, ts.day)
-    dest_filename = "{}.jpg".format(obj["timestamp"])
+    dest_filename = "{}.jpg".format(obj["timestamp"].replace(":", "-"))
     path = "{}/{}".format(dest_dir, dest_filename)
     
     #check the destination dir, if it doesn't exist, just create it
