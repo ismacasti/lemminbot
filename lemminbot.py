@@ -37,7 +37,7 @@ def main():
     ts = getDate(obj["timestamp"])
     
     #directory and file name 
-    dest_dir = "{}/{}{}{}".format(BASE_DIR, ts.year, ts.month, ts.day)
+    dest_dir = "{}/{:02}{:02}{:02}".format(BASE_DIR, ts.year, ts.month, ts.day)
     dest_filename = "{}.jpg".format(obj["timestamp"])
     path = "{}/{}".format(dest_dir, dest_filename)
     
