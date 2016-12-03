@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-APIURL = "https://hyperion.nvf.io/latest-image/f437c149-5311-41f1-bddc-60369e69a000/?format=json"
+APIURL = "http://hyperion.nvf.io/latest-image/f437c149-5311-41f1-bddc-60369e69a000/?format=json"
 
 BASE_DIR = "."
 
@@ -10,7 +10,7 @@ import os
 
 def getJSONObject(url):
     #we get the jason data from the API
-    json_text = requests.get(url).text
+    json_text = requests.get(url, verify=False).text
     #and we parse it and return it
     return json.loads(json_text)
 
@@ -37,9 +37,9 @@ def main():
     ts = getDate(obj["timestamp"])
     
     #directory and file name 
-    dest_dir = "{}/{:02}{:02}{:02}".format(BASE_DIR, ts.year, ts.month, ts.day)
-    dest_filename = "{}.jpg".format(obj["timestamp"].replace(":", "-"))
-    path = "{}/{}".format(dest_dir, dest_filename)
+    dest_dir = "{0}/{1:02}{2:02}{3:02}".format(BASE_DIR, ts.year, ts.month, ts.day)
+    dest_filename = "{0}.jpg".format(obj["timestamp"].replace(":", "-"))
+    path = "{0}/{1}".format(dest_dir, dest_filename)
     
     #check the destination dir, if it doesn't exist, just create it
     if not (os.path.isdir(dest_dir)):
@@ -53,11 +53,10 @@ def main():
     #download file
     downloadJPEG(obj["file"], path)
     
-    print("The file is downloaded to {}.".format(path))
+    print("The file is downloaded to {0}.".format(path))
 
 
 
 if __name__ == "__main__":
     # execute only if run as a script
     main()
-    
