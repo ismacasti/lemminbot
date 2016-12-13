@@ -85,7 +85,7 @@ def main():
     
     #get weather data
     weather_json = getWeatherData(WEATHERURL, xpaths)
-    now = dt.now()
+    now = dt.utcnow()
     now_rfc3339 = dt.strftime(now, '%Y-%m-%dT%H:%M:%SZ').replace(":", "-")
     
     weather_dest_dir = "{0}/{1:02}{2:02}{3:02}/weather".format(BASE_DIR, now.year, now.month, now.day)
