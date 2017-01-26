@@ -29,8 +29,16 @@ xpaths["solarpower"] = '//*[@id="WeatherInfo"]/tr[6]/td[2]/text()'
 xpaths["baropressure"] = '//*[@id="WeatherInfo"]/tr[7]/td[2]/text()'
 xpaths["rainfall"] = '//*[@id="WeatherInfo"]/tr[8]/td[2]/text()'
 
+
+# Sync the temp files with rsync frequently! (around every 15 minutes or so)
+#rsync -W -r --remove-source-files --exclude="*.temp"  /tmp/lemminbot/ <<destination directory>>
+
+
 import os
-BASE_DIR = "{0}/ismael/files/lemminbot".format(os.getenv("OPENSHIFT_DATA_DIR", "."))
+BASE_DIR = "/tmp/lemminbot"
+
+files = list()
+temp_suffix = ".temp"
 
 
 import json
@@ -50,10 +58,11 @@ def getDate(rfc3339):
 
 def downloadJPEG(url, dest_path):
     r = requests.get(url, stream=True)
-    f = open(dest_path, "wb")
+    f = open("{0}{1}".format(dest_path, temp_suffix), "wb")
     f.write(r.content)
     r.close()
     f.close()
+    files.append(dest_path)
 
 def getWeatherData(url, xpaths):
 
@@ -67,9 +76,10 @@ def getWeatherData(url, xpaths):
     
 
 def saveJSON(path, json):
-    f = open(path, "w")
+    f = open("{0}{1}".format(path, temp_suffix), "w")
     f.write(json)
     f.close()
+    files.append(path)
     
 def checkAndCreateDir(dest_dir):
     #check the destination dir, if it doesn't exist, just create it
@@ -81,7 +91,7 @@ def checkAndCreateDir(dest_dir):
         
 
 def main():
-    print("Lemminbot v0.3")
+    print("Lemminbot v0.4, now with shitty VPS resilience")
     
     #get weather data
     try:
@@ -97,7 +107,7 @@ def main():
         checkAndCreateDir(weather_dest_dir)
         
         saveJSON(weather_path, weather_json)
-        print("Saved weather data on {0}".format(weather_path))
+        print("Saved weather data on {0}{1}".format(weather_path, temp_suffix))
     except IndexError:
         print("The weather site is dead?")
     
@@ -134,7 +144,12 @@ def main():
         #download file
         downloadJPEG(obj["file"], path)
         
-        print("The file is downloaded to {0}.".format(path))
+        print("The file is downloaded to {0}{1}".format(path, temp_suffix))
+        
+    
+    for filepath in files:
+        os.rename("{0}{1}".format(filepath, temp_suffix), filepath)
+        print("{0}{1} ==> {0}".format(filepath, temp_suffix))
 
 
 
