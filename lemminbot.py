@@ -35,7 +35,7 @@ xpaths["rainfall"] = '//*[@id="WeatherInfo"]/tr[8]/td[2]/text()'
 
 
 import os
-BASE_DIR = "/tmp/lemminbot"
+BASE_DIR = "/mnt/data/lemminbot"
 
 files = list()
 temp_suffix = ".temp"
