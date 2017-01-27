@@ -45,6 +45,7 @@ import json
 import requests
 from datetime import datetime as dt
 from lxml import html
+from io import BytesIO
 
 
 def getJSONObject(url):
@@ -57,7 +58,7 @@ def getDate(rfc3339):
     return dt.strptime(rfc3339, '%Y-%m-%dT%H:%M:%SZ')
 
 def downloadJPEG(url, dest_path):
-    r = requests.get(url, stream=True)
+    r = requests.get(url, stream=False)
     f = open("{0}{1}".format(dest_path, temp_suffix), "wb")
     f.write(r.content)
     r.close()
@@ -91,7 +92,7 @@ def checkAndCreateDir(dest_dir):
         
 
 def main():
-    print("Lemminbot v0.4, now with shitty VPS resilience")
+    print("Lemminbot v0.4.1, now with shitty VPS resilience")
     
     #get weather data
     try:
