@@ -96,7 +96,7 @@ def main(argv):
     parser = argparse.ArgumentParser(description="Downloads weird pics from obscure APIs")
     parser.add_argument("--data-dir", "-d", help="Where to put the data obtained. Defaults to /tmp/lemminbot")
     args = parser.parse_args()
-    
+
     #we default to /tmp/
     if (args.data_dir): 
         BASE_DIR = args.data_dir
