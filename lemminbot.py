@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 #https://hyperion.nvf.io/latest-image/f967a20a-7b8b-4afe-b9a5-8b45285627a9/thumbnail
 #https://hyperion.nvf.io/latest-image/57068cd1-60ab-4545-915a-e568ee030fa5/thumbnail
 #https://hyperion.nvf.io/latest-image/aa389088-02c6-4849-8785-da19683c50c4/thumbnail
@@ -45,7 +45,6 @@ import json
 import requests
 from datetime import datetime as dt
 from lxml import html
-from io import BytesIO
 
 
 def getJSONObject(url):
@@ -92,7 +91,7 @@ def checkAndCreateDir(dest_dir):
         
 
 def main():
-    print("Lemminbot v0.4.1, now with shitty VPS resilience")
+    print("Lemminbot v0.4.2, now with shitty VPS and Åbo Akademi resilience")
     
     #get weather data
     try:
@@ -111,7 +110,8 @@ def main():
         print("Saved weather data on {0}{1}".format(weather_path, temp_suffix))
     except IndexError:
         print("The weather site is dead?")
-    
+    except requests.exceptions.ConnectionError:
+        print("Weather data unavailable. Probably abo.fi dead")
     
     
     
