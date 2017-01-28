@@ -34,8 +34,8 @@ xpaths["rainfall"] = '//*[@id="WeatherInfo"]/tr[8]/td[2]/text()'
 #rsync -W -r --remove-source-files --exclude="*.temp"  /tmp/lemminbot/ <<destination directory>>
 
 
-import os
-BASE_DIR = "/tmp/lemminbot"
+import os, sys
+BASE_DIR = "/tmp/lemminbot" #defaults to /tmp 
 
 files = list()
 temp_suffix = ".temp"
@@ -45,6 +45,7 @@ import json
 import requests
 from datetime import datetime as dt
 from lxml import html
+import argparse
 
 
 def getJSONObject(url):
@@ -90,8 +91,16 @@ def checkAndCreateDir(dest_dir):
         
         
 
-def main():
-    print("Lemminbot v0.4.2, now with shitty VPS and Åbo Akademi resilience")
+def main(argv):
+    print("Lemminbot v0.5, OMG command line arguments!")
+    
+    parser = argparse.ArgumentParser(description="Downloads weird pics from obscure APIs")
+    parser.add_argument("--data-dir", "-d", help="Where to put the data obtained. Defaults to /tmp/lemminbot")
+    args = parser.parse_args()
+    if (args.data_dir): BASE_DIR = args.data_dir
+    
+    print("Downloading to {}".format(BASE_DIR))
+    
     
     #get weather data
     try:
@@ -156,4 +165,4 @@ def main():
 
 if __name__ == "__main__":
     # execute only if run as a script
-    main()
+    main(sys.argv[1:])
