@@ -35,7 +35,6 @@ xpaths["rainfall"] = '//*[@id="WeatherInfo"]/tr[8]/td[2]/text()'
 
 
 import os, sys
-BASE_DIR = "/tmp/lemminbot" #defaults to /tmp 
 
 files = list()
 temp_suffix = ".temp"
@@ -97,7 +96,12 @@ def main(argv):
     parser = argparse.ArgumentParser(description="Downloads weird pics from obscure APIs")
     parser.add_argument("--data-dir", "-d", help="Where to put the data obtained. Defaults to /tmp/lemminbot")
     args = parser.parse_args()
-    if (args.data_dir): BASE_DIR = args.data_dir
+    
+    #we default to /tmp/
+    if (args.data_dir): 
+        BASE_DIR = args.data_dir
+    else:
+        BASE_DIR = "/tmp/lemminbot" 
     
     print("Downloading to {}".format(BASE_DIR))
     
