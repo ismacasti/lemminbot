@@ -45,6 +45,7 @@ import requests
 from datetime import datetime as dt
 from lxml import html
 import argparse
+import threading
 
 
 def getJSONObject(url):
@@ -56,13 +57,13 @@ def getJSONObject(url):
 def getDate(rfc3339):
     return dt.strptime(rfc3339, '%Y-%m-%dT%H:%M:%SZ')
 
-def downloadJPEG(url, dest_path):
-    r = requests.get(url, stream=False)
-    f = open("{0}{1}".format(dest_path, temp_suffix), "wb")
-    f.write(r.content)
-    r.close()
-    f.close()
-    files.append(dest_path)
+#def downloadJPEG(url, dest_path):
+    #r = requests.get(url, stream=False)
+    #f = open("{0}{1}".format(dest_path, temp_suffix), "wb")
+    #f.write(r.content)
+    #r.close()
+    #f.close()
+    #files.append(dest_path)
 
 def getWeatherData(url, xpaths):
 
@@ -86,14 +87,29 @@ def checkAndCreateDir(dest_dir):
     if not (os.path.isdir(dest_dir)):
         os.makedirs(dest_dir)
     
-    
-
+class downloaderThread (threading.Thread):
+    def __init__(self, url, dest_path, files):
+        threading.Thread.__init__(self)
+        self.url = url
+        self.dest_path = dest_path
+        self.files = files
+    def downloadJPEG(self, url, dest_path, files):
+        r = requests.get(url, stream=False)
+        f = open("{0}{1}".format(dest_path, temp_suffix), "wb")
+        f.write(r.content)
+        r.close()
+        f.close()
+        files.append(dest_path)
+        
+    def run(self):
+        self.downloadJPEG(self.url, self.dest_path, self.files)
+        print("The file is downloaded to {0}{1}".format(self.dest_path, temp_suffix))
     
         
         
 
 def main(argv):
-    print("Lemminbot v0.6, workarounding Abo akademi bullshit")
+    print("Lemminbot v0.7, will you be my thread?")
     
     parser = argparse.ArgumentParser(description="Downloads weird pics from obscure APIs")
     parser.add_argument("--data-dir", "-d", help="Where to put the data obtained. Defaults to /tmp/lemminbot")
@@ -110,7 +126,7 @@ def main(argv):
     
 
 
-    
+    threads = list()
     
     
     #do this for all api endpoints
@@ -140,9 +156,16 @@ def main(argv):
             continue
         
         #download file
-        downloadJPEG(obj["file"], path)
+        #downloadJPEG(obj["file"], path)
+        #print("The file is downloaded to {0}{1}".format(path, temp_suffix))
         
-        print("The file is downloaded to {0}{1}".format(path, temp_suffix))
+        threads.append(downloaderThread(obj["file"], path, files))
+        
+    for thread in threads:
+        thread.start()
+    
+    for thread in threads:
+        thread.join()
         
     for filepath in files:
         os.rename("{0}{1}".format(filepath, temp_suffix), filepath)
