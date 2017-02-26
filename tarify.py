@@ -8,7 +8,7 @@ import subprocess
 import shutil
 folder_date_regex = "^[0-9]{8,8}$"
 
-tar_command = "LANG=C tar --create --file '{output_file}' --verbose '{input_dir}'"
+tar_command = "LANG=C tar --create --file '{output_file}' --verbose -C '{input_dir}' ."
 
 
 
@@ -25,6 +25,8 @@ def main(argv):
         if (folder_date_compiled.match(date)):
             lemminbot.checkAndCreateDir(os.path.join(args.to_dir, date))
             print("mkdir {}".format(os.path.join(args.to_dir, date)))
+        else:
+            continue
             
         sites = os.listdir(os.path.join(args.from_dir, date))
         for site in sites:
