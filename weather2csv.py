@@ -34,7 +34,7 @@ def main(argv):
             filename = os.path.basename(filepath)
             date_parsed = re.search(iso8601modified_regex, filename).group(1,2)
             
-            output["time"] = "{}T{}Z".format(date_parsed[0], date_parsed[1].replace("-", ":"))
+            output["time"] = "{} {} ".format(date_parsed[0], date_parsed[1].replace("-", ":"))
             
             
             output["baropressure"] = re.search(number_regex, data["baropressure"]).group(0)
