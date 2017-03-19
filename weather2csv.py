@@ -49,7 +49,7 @@ def main(argv):
             
             output["temp"] = re.search(number_regex, data["temp"]).group(0)
             
-            output["wind"] = re.search(number_regex, data["baropressure"]).group(0)
+            output["wind"] = re.search(number_regex, data["wind"]).group(0)
             
             output["winddir"] = data["wind"].split()[3]
             output["windchill"] = re.search(number_regex, data["windchill"]).group(0)
